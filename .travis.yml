@@ -17,18 +17,13 @@ matrix:
     - python: 2.7
       env: PEP=true
 
-addons:
-  apt:
-    sources:
-      - r-packages-precise
-    packages:
-      - r-base-dev
-
 cache:
   directories:
     - ~/Rlib
 
 before_install:
+  - sudo apt -qq update
+  - sudo apt -y install  r-base-dev r-packages-precise
   - R --version
   - Rscript --version
 
