@@ -25,7 +25,7 @@ from nbconvert import TemplateExporter
 
 from pandocattributes import PandocAttributes
 
-languages = ['python', 'r', 'ruby', 'bash']
+languages = ['python', 'r', 'ruby', 'bash', 'yaml', 'json']
 
 
 def cast_unicode(s, encoding='utf-8'):
@@ -144,6 +144,15 @@ class MarkdownReader(NotebookReader):
 
         self.caption_comments = caption_comments
 
+    def new_raw_block(self, **kwargs):
+        """Create a new code block."""
+        proto = {'content': '',
+                 'type': "raw",
+                 'IO': '',
+                 'attributes': ''}
+        proto.update(**kwargs)
+        return proto
+
     def new_code_block(self, **kwargs):
         """Create a new code block."""
         proto = {'content': '',
@@ -234,6 +243,7 @@ class MarkdownReader(NotebookReader):
         except KeyError:
             language = None
 
+
         block['language'] = language
         block['attributes'] = attr
 
@@ -244,6 +254,9 @@ class MarkdownReader(NotebookReader):
         elif language != self.python and self.magic:
             block['content'] = CodeMagician.magic(language) + block['content']
             block['language'] = language
+        elif language == ("yaml", "json"):
+            block['language'] = language
+
 
         return self.new_code_block(**block)
 
@@ -277,8 +290,7 @@ class MarkdownReader(NotebookReader):
         text_blocks = {i: self.new_text_block(content=text[i:j])
                        for i, j in text_limits}
 
-        # import pdb; pdb.set_trace()
-        tbl = list(text_blocks.items())      
+        tbl = list(text_blocks.items())
         for k, v in tbl:
             content = v.pop('content')
 
@@ -312,7 +324,11 @@ class MarkdownReader(NotebookReader):
     @staticmethod
     def create_code_cell(block):
         """Create a notebook code cell from a block."""
-        code_cell = nbbase.new_code_cell(source=block['content'])
+        if block['language'] in ("yaml", "json"):
+            #import pdb; pdb.set_trace()
+            code_cell = nbbase.new_markdown_cell(source='\n```\n' + block['content'][7:]+ '\n```\n')
+        else:
+            code_cell = nbbase.new_code_cell(source=block['content'])
 
         attr = block['attributes']
         if not attr.is_empty:
@@ -323,7 +339,7 @@ class MarkdownReader(NotebookReader):
                 code_cell.execution_count = None
             else:
                 code_cell.execution_count = int(execution_count)
-
+        #import pdb; pdb.set_trace()
         return code_cell
 
     @staticmethod
@@ -363,6 +379,10 @@ class MarkdownReader(NotebookReader):
                   block['IO'] == 'output' and
                   cells[-1].cell_type == 'code'):
                 cells[-1].outputs = self.create_outputs(block)
+
+            elif block['type'] == "raw":
+                code_cell = self.create_code_cell(block)
+                cells.append(code_cell)
 
             elif block['type'] == self.markdown:
                 markdown_cell = self.create_markdown_cell(block)
