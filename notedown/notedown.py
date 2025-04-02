@@ -26,6 +26,7 @@ from nbconvert import TemplateExporter
 from pandocattributes import PandocAttributes
 
 languages = ['python', 'r', 'ruby', 'bash']
+MARKDOWN_LANGUAGES = ['mermaid', 'yaml', 'json']
 
 
 def cast_unicode(s, encoding='utf-8'):
@@ -270,12 +271,27 @@ class MarkdownReader(NotebookReader):
         text_stops = [m.start() for m in code_matches] + [len(text)]
         text_limits = list(zip(text_starts, text_stops))
 
-        # list of the groups from the code blocks
-        code_blocks = [(m.start(), self.new_code_block(**m.groupdict()))
-                       for m in code_matches]
 
-        text_blocks = {i: self.new_text_block(content=text[i:j])
-                       for i, j in text_limits}
+        code_blocks_candidates = [(m.start(), m.groupdict()) for m in code_matches]
+        # list of the groups from the code blocks
+        code_blocks = [
+            (start, self.new_code_block(**args))
+            for start, args in code_blocks_candidates
+            if args.get("attributes") not in MARKDOWN_LANGUAGES
+        ]
+
+        text_blocks = {
+            i: self.new_text_block(content=text[i:j]) for i, j in text_limits
+        }
+        text_blocks.update(
+            {
+                i: self.new_text_block(
+                    content=data["raw"],
+                )
+                for i, data in code_blocks_candidates
+                if data.get("attributes") in MARKDOWN_LANGUAGES
+            }
+        )
 
         # import pdb; pdb.set_trace()
         tbl = list(text_blocks.items())
