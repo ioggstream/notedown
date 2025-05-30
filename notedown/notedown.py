@@ -25,8 +25,8 @@ from nbconvert import TemplateExporter
 
 from pandocattributes import PandocAttributes
 
-languages = ['python', 'r', 'ruby', 'bash']
-MARKDOWN_LANGUAGES = ['mermaid', 'yaml', 'json']
+languages = ['python', 'r', 'ruby', 'bash', 'solution']
+MARKDOWN_LANGUAGES = ['mermaid', 'yaml', 'json', 'raw', 'text', 'sparql', 'turtle', 'trig']
 
 
 def cast_unicode(s, encoding='utf-8'):
@@ -65,6 +65,9 @@ class MarkdownReader(NotebookReader):
     code = u'code'
     markdown = u'markdown'
     python = u'python'
+
+    # python languages
+    PYTHONS = ('python', 'py', '', None)
 
     # regular expressions to match a code block, splitting into groups
     # N.B you can't share group names between these patterns.
@@ -144,6 +147,9 @@ class MarkdownReader(NotebookReader):
         self.match = match
 
         self.caption_comments = caption_comments
+
+        self.pythons = list(self.PYTHONS)
+        self.pythons += ['solution'] if os.getenv('SHOW_SOLUTIONS') else []
 
     def new_code_block(self, **kwargs):
         """Create a new code block."""
@@ -239,8 +245,14 @@ class MarkdownReader(NotebookReader):
         block['attributes'] = attr
 
         # ensure one identifier for python code
-        if language in ('python', 'py', '', None):
+        if language in self.pythons:
             block['language'] = self.python
+        elif language == 'solution':
+            hidden_solution = '\n'.join(f'<!-- {l} -->' for l in block['content'].splitlines())
+            hidden_solution = f'<!--\n{block["content"]}\n-->'
+            return self.new_text_block(
+                content='Double-click for solution :)\n' + hidden_solution
+            )
         # add alternate language execution magic
         elif language != self.python and self.magic:
             block['content'] = CodeMagician.magic(language) + block['content']
