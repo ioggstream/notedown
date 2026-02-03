@@ -52,9 +52,9 @@ before_install:
   - ls ~/Rlib
 
 install:
-  - pip install pep8
+  - pip install flake8
   - pip install .
 
 script:
-  - if $PEP; then pep8 notedown; fi
-  - if ! $PEP; then nosetests; fi
+  - if $PEP; then flake8 notedown --max-line-length=120; fi
+  - if ! $PEP; then pytest tests.py -v; fi

@@ -2,8 +2,6 @@
 import os
 import tempfile
 
-import nose.tools as nt
-
 import nbformat
 
 import notedown
@@ -206,8 +204,7 @@ def test_notedown():
     notebook = create_json_notebook(sample_markdown)
     diff = ndiff(sample_notebook.splitlines(1), notebook.splitlines(1))
     print('\n'.join(diff))
-    nt.assert_multi_line_equal(create_json_notebook(sample_markdown),
-                               sample_notebook)
+    assert create_json_notebook(sample_markdown) == sample_notebook
 
 
 def parse_cells(text, regex=None):
@@ -344,7 +341,7 @@ def test_roundtrip():
     mw = notedown.MarkdownWriter(template_file='notedown/templates/markdown.tpl', strip_outputs=True)
     markdown = mw.writes(notebook)
 
-    nt.assert_multi_line_equal(roundtrip_markdown, markdown)
+    assert roundtrip_markdown == markdown
 
 
 def test_template_load_absolute():
@@ -384,7 +381,7 @@ def test_markdown_markdown():
     mw = notedown.MarkdownWriter(notedown.markdown_template)
     nb = mr.reads(roundtrip_markdown)
     markdown = mw.writes(nb)
-    nt.assert_multi_line_equal(markdown, roundtrip_markdown)
+    assert markdown == roundtrip_markdown
 
 
 def test_R():
@@ -410,7 +407,7 @@ def test_R():
     nbjson = writer.writes(notebook)
     reference_nbjson = writer.writes(reference_notebook)
 
-    nt.assert_multi_line_equal(nbjson, reference_nbjson)
+    assert nbjson == reference_nbjson
 
 
 def test_match_fenced():
