@@ -31,6 +31,9 @@ coverage.xml
 *.cover
 .hypothesis/
 
+# Linting
+.ruff_cache/
+
 # IDEs
 .vscode/
 .idea/

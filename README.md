@@ -1,4 +1,4 @@
-*Python 3.8+ and IPython 4 / Jupyter compatible!* <a href='https://travis-ci.org/aaren/wavelets'> <img src='https://secure.travis-ci.org/aaren/wavelets.png?branch=master'></a>
+*Python 3.12+ and IPython 4 / Jupyter compatible!*
 
 Convert IPython Notebooks to markdown (and back)
 ------------------------------------------------
@@ -6,7 +6,7 @@ Convert IPython Notebooks to markdown (and back)
 [notedown] is a simple tool to create [IPython notebooks][ipython]
 from markdown (and r-markdown).
 
-**Python Support:** Python 3.8, 3.9, 3.10, 3.11, 3.12+
+**Python Support:** Python 3.12+
 
 [ipython]: http://www.ipython.org/notebook
 [notedown]: http://github.com/aaren/notedown
