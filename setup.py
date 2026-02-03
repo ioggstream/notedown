@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import subprocess
 
 from setuptools import setup
@@ -25,8 +24,19 @@ setup(
     url='http://github.com/aaren/notedown',
     install_requires=['nbformat',
                       'nbconvert',
-                      'pandoc-attributes',
-                      'six'],
+                      'pandoc-attributes'],
+    python_requires='>=3.8',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+    ],
     entry_points={'console_scripts': ['notedown = notedown.main:app', ]},
     package_dir={'notedown': 'notedown'},
     package_data={'notedown': ['templates/markdown.tpl',

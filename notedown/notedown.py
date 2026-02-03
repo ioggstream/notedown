@@ -1,16 +1,9 @@
-from __future__ import absolute_import
-
 import json
 import logging
 import os
 import re
 import subprocess
 import tempfile
-
-from six import PY3
-from six.moves import map
-from six.moves import range
-from six.moves import zip
 
 import nbformat.v4.nbbase as nbbase
 import nbformat.v4 as v4
@@ -30,8 +23,8 @@ MARKDOWN_LANGUAGES = ['mermaid', 'yaml', 'json', 'raw', 'text', 'sparql', 'turtl
 
 
 def cast_unicode(s, encoding='utf-8'):
-    """Python 2/3 compatibility function derived from IPython py3compat."""
-    if isinstance(s, bytes) and not PY3:
+    """Convert bytes to string if needed."""
+    if isinstance(s, bytes):
         return s.decode(encoding, "replace")
     return s
 
