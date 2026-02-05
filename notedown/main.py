@@ -1,9 +1,10 @@
 import os
 import sys
 import argparse
-import pkg_resources
 import io
 import logging
+from importlib.metadata import version, PackageNotFoundError
+from importlib.resources import files
 
 import nbformat as nbformat
 from nbconvert.utils.io import unicode_std_stream
@@ -16,17 +17,14 @@ from .notedown import (MarkdownReader,
 
 
 try:
-    __version__ = pkg_resources.require('notedown')[0].version
-
-except pkg_resources.DistributionNotFound:
+    __version__ = version('notedown')
+except PackageNotFoundError:
     __version__ = 'testing'
 
-markdown_template \
-    = pkg_resources.resource_filename('notedown',
-                                      'templates/markdown.tpl')
-markdown_figure_template \
-    = pkg_resources.resource_filename('notedown',
-                                      'templates/markdown_outputs.tpl')
+# Get template file paths using importlib.resources
+_templates = files('notedown').joinpath('templates')
+markdown_template = str(_templates.joinpath('markdown.tpl'))
+markdown_figure_template = str(_templates.joinpath('markdown_outputs.tpl'))
 
 examples = """
 Example usage of notedown
