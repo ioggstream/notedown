@@ -32,7 +32,7 @@ jobs:
     
     - name: Run tests
       run: |
-        pytest tests.py -v
+        pytest
 
   lint:
     runs-on: ubuntu-latest
