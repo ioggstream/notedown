@@ -3,13 +3,14 @@ import subprocess
 from setuptools import setup
 
 try:
-    pandoc = subprocess.Popen(['pandoc', 'README.md', '--to', 'rst'],
-                              stdout=subprocess.PIPE)
+    pandoc = subprocess.Popen(
+        ["pandoc", "README.md", "--to", "rst"], stdout=subprocess.PIPE
+    )
 
     readme = pandoc.communicate()[0].decode()
 
 except OSError:
-    with open('README.md') as f:
+    with open("README.md") as f:
         readme = f.read()
 
 setup(
@@ -17,25 +18,28 @@ setup(
     version="2.0.0",
     description="Convert markdown to IPython notebook.",
     long_description=readme,
-    packages=['notedown'],
+    packages=["notedown"],
     author="Aaron O'Leary",
-    author_email='dev@aaren.me',
-    license='BSD 2-Clause',
-    url='http://github.com/aaren/notedown',
-    install_requires=['nbformat',
-                      'nbconvert',
-                      'pandoc-attributes'],
-    python_requires='>=3.12',
+    author_email="dev@aaren.me",
+    license="BSD 2-Clause",
+    url="http://github.com/aaren/notedown",
+    install_requires=["nbformat", "nbconvert", "pandoc-attributes"],
+    python_requires=">=3.12",
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.12',
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: BSD License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.12",
     ],
-    entry_points={'console_scripts': ['notedown = notedown.main:app', ]},
-    package_dir={'notedown': 'notedown'},
-    package_data={'notedown': ['templates/markdown.tpl',
-                               'templates/markdown_outputs.tpl']},
+    entry_points={
+        "console_scripts": [
+            "notedown = notedown.main:app",
+        ]
+    },
+    package_dir={"notedown": "notedown"},
+    package_data={
+        "notedown": ["templates/markdown.tpl", "templates/markdown_outputs.tpl"]
+    },
     include_package_data=True,
 )

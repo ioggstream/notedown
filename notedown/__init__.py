@@ -6,6 +6,6 @@ try:
     from .contentsmanager import NotedownContentsManager
     from .contentsmanager import NotedownContentsManagerStripped
 except ImportError:
-    err = 'You need to install the jupyter notebook.'
+    err = "You need to install the jupyter notebook."
     NotedownContentsManager = err
     NotedownContentsManagerStripped = err
