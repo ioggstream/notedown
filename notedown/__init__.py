@@ -1,5 +1,9 @@
-from .notedown import *
-from .main import convert, markdown_template, __version__
+from .notedown import *  # noqa: F403
+from .main import (
+    convert as convert,
+    markdown_template as markdown_template,
+    __version__ as __version__,
+)
 
 # avoid having to require the notebook to install notedown
 try:

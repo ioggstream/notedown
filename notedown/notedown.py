@@ -18,6 +18,16 @@ from nbconvert import TemplateExporter
 
 from pandocattributes import PandocAttributes
 
+__all__ = [
+    "MarkdownReader",
+    "MarkdownWriter",
+    "CodeMagician",
+    "Knitr",
+    "cast_unicode",
+    "strip",
+    "run",
+]
+
 languages = ["python", "r", "ruby", "bash", "solution"]
 MARKDOWN_LANGUAGES = [
     "mermaid",
@@ -251,7 +261,7 @@ class MarkdownReader(NotebookReader):
             block["language"] = self.python
         elif language == "solution":
             hidden_solution = "\n".join(
-                f"<!-- {l} -->" for l in block["content"].splitlines()
+                f"<!-- {line} -->" for line in block["content"].splitlines()
             )
             hidden_solution = f"<!--\n{block['content']}\n-->"
             return self.new_text_block(
